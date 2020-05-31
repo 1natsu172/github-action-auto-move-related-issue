@@ -1,0 +1,15 @@
+name: "Auto card assign"
+on:
+  project_card:
+    types: ["created", "moved", "converted"]
+
+jobs:
+  card_assign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        id: card_assign_action
+        with:
+          # github_token: "${{ secrets.GITHUB_TOKEN }}"
+          config: "project-card-assign.yml"
