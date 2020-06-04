@@ -4286,7 +4286,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const github_1 = __webpack_require__(469);
-const getLinkedIssue_1 = __webpack_require__(890);
+const getRelatedIssue_1 = __webpack_require__(890);
 const utils_1 = __webpack_require__(95);
 const libs_1 = __webpack_require__(434);
 function run() {
@@ -4298,7 +4298,7 @@ function run() {
         core.debug(utils_1.prettyStringify(core.getInput('config')));
         core.endGroup();
         try {
-            yield getLinkedIssue_1.getLinkedIssue();
+            yield getRelatedIssue_1.getRelatedIssue();
         }
         catch (error) {
             libs_1.thrownHandler(error);
@@ -29133,8 +29133,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLinkedIssue = void 0;
-function getLinkedIssue() {
+exports.getRelatedIssue = void 0;
+function getRelatedIssue() {
     return __awaiter(this, void 0, void 0, function* () {
         return;
         // const cardNodeId = getProjectCardNodeId()
@@ -29166,7 +29166,7 @@ function getLinkedIssue() {
         // })
     });
 }
-exports.getLinkedIssue = getLinkedIssue;
+exports.getRelatedIssue = getRelatedIssue;
 
 
 /***/ }),

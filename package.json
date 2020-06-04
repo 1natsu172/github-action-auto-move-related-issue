@@ -1,8 +1,8 @@
 {
-  "name": "github-action-auto-card-assign",
+  "name": "github-action-auto-move-related-issue",
   "version": "0.0.0",
   "private": true,
-  "description": "Assign appropriate assignees by column to card on github projects",
+  "description": "TODO",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",

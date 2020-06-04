@@ -4,12 +4,12 @@ export const assignableIssue = {
     project: {
       name: 'test-project',
       url:
-        'https://github.com/1natsu172/github-action-auto-card-assign/projects/1'
+        'https://github.com/1natsu172/github-action-auto-move-related-issue/projects/1'
     },
     column: {
       name: 'In progress',
       url:
-        'https://github.com/1natsu172/github-action-auto-card-assign/projects/1/columns/8515972'
+        'https://github.com/1natsu172/github-action-auto-move-related-issue/projects/1/columns/8515972'
     },
     content: {
       __typename: 'Issue',
@@ -34,12 +34,12 @@ export const assignablePullRequest = {
     project: {
       name: 'test-project',
       url:
-        'https://github.com/1natsu172/github-action-auto-card-assign/projects/1'
+        'https://github.com/1natsu172/github-action-auto-move-related-issue/projects/1'
     },
     column: {
       name: 'Done',
       url:
-        'https://github.com/1natsu172/github-action-auto-card-assign/projects/1/columns/8515973'
+        'https://github.com/1natsu172/github-action-auto-move-related-issue/projects/1/columns/8515973'
     },
     content: {
       __typename: 'PullRequest',

@@ -2,20 +2,20 @@
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# GitHub Actions Auto-Card-Assign
+# GitHub Actions auto-move-related-issue
 
 This is GitHub Actions that sets Assignees on the card for each column of GitHub Project.
 
 Supporting action triggers work when create or move an Issue/PullRequest card or convert a note to an Issue card.
 
 ## Screenshot
-![DEMO GIF](https://raw.githubusercontent.com/1natsu172/github-action-auto-card-assign/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/demo.gif)
+![DEMO GIF](https://raw.githubusercontent.com/1natsu172/github-action-auto-move-related-issue/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/demo.gif)
 
 ## Usage
 
 ### Setup workflow file
 
-example `.github/workflows/auto-card-assign.yml`
+example `.github/workflows/auto-move-related-issue.yml`
 
 ```yaml
 name: "Auto card assign"
@@ -27,23 +27,23 @@ jobs:
   card_assign:
     runs-on: ubuntu-latest
     steps:
-      - uses: 1natsu172/github-action-auto-card-assign@v1
+      - uses: 1natsu172/github-action-auto-move-related-issue@v1
         id: card_assign_action
         with:
           # github_token: "${{ secrets.GITHUB_TOKEN }}"
-          config: "project-card-assign.yml"
+          config: "auto-move-related-issue.yml"
 ```
 
 ・ `with` options
 
 |     name     | description      |          default          | required |            e.g.             |
 | :----------: | :--------------- | :-----------------------: | :------: | :-------------------------: |
-|    config    | Config file name | `project-card-assign.yml` |   true   |  `card-assign-config.yml`   |
+|    config    | Config file name | `auto-move-related-issue.yml` |   true   |  `auto-move-related-issue-config.yml`   |
 | github_token | Access token     |    `${{github.token}}`    |   true   | `${{secrets.ACCESS_TOKEN}}` |
 
 ### Configure assignees for each project column
 
-example `.github/project-card-assign.yml`
+example `.github/auto-move-related-issue.yml`
 
 ```yaml
 kanban1: # Project name
@@ -66,15 +66,15 @@ kanban1: # Project name
 
 * Please write yaml
   * [configure example](https://codebeautify.org/yaml-to-json-xml-csv/cbf4517b)
-  * Type definition of [Config](https://github.com/1natsu172/github-action-auto-card-assign/blob/master/src/types/config.ts) = Result of [yaml to json](https://codebeautify.org/yaml-to-json-xml-csv#)
+  * Type definition of [Config](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/master/src/types/config.ts) = Result of [yaml to json](https://codebeautify.org/yaml-to-json-xml-csv#)
   * assignee names are expressed a `string[]`
 
 ### Write the exact name
 
 According to the image below.
 
-![project name and column name is here](https://github.com/1natsu172/github-action-auto-card-assign/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/project-and-column-name.png?raw=true)
-![login name is here](https://github.com/1natsu172/github-action-auto-card-assign/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/login-name.png?raw=true)
+![project name and column name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/project-and-column-name.png?raw=true)
+![login name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/login-name.png?raw=true)
 
 **Be careful!**
 
@@ -112,7 +112,7 @@ The action itself is successful and the assignment process is skipped.
 
 ## Versioning
 
-Use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/1natsu172/github-action-auto-card-assign/tags). 
+Use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/1natsu172/github-action-auto-move-related-issue/tags). 
 
 ## ©️ License
 

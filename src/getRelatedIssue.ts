@@ -1,20 +1,20 @@
-import * as core from '@actions/core'
+import * as core from "@actions/core";
 import {
   getProjectName,
   getColumnName,
   getAssigneesLoginFromConfig,
   getAssignableCardInfo,
   getAssignableCardNodeId,
-  getProjectCardNodeId
-} from './libs'
+  getProjectCardNodeId,
+} from "./libs";
 import {
   removeAssigneesFromAssignable,
-  addAssigneesToAssignable
-} from './usecases'
-import {prettyStringify} from './utils'
+  addAssigneesToAssignable,
+} from "./usecases";
+import { prettyStringify } from "./utils";
 
-export async function getLinkedIssue(): Promise<void> {
-  return
+export async function getRelatedIssue(): Promise<void> {
+  return;
   // const cardNodeId = getProjectCardNodeId()
   // if (!cardNodeId) {
   //   throw Error('Not found cardNodeId.')

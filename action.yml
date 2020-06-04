@@ -1,5 +1,5 @@
-name: "Auto card assign"
-description: "Assign appropriate assignees by column to card on github projects"
+name: "auto-move-related-issue"
+description: "TODO"
 author: "1natsu172"
 inputs:
   github_token:
@@ -8,7 +8,7 @@ inputs:
     required: true
   config:
     description: "This Action's config."
-    default: "project-card-assign.yml"
+    default: "auto-move-related-issue.yml"
     required: true
 branding:
   icon: "user-check"

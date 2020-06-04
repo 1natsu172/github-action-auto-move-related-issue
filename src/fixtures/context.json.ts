@@ -12,7 +12,7 @@ export const context = {
       column_id: 8515972,
       column_url: 'https://api.github.com/projects/columns/8515972',
       content_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/issues/2',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/issues/2',
       created_at: '2020-03-30T14:37:23Z',
       creator: {
         avatar_url: 'https://avatars2.githubusercontent.com/u/7282145?v=4',
@@ -47,52 +47,53 @@ export const context = {
     },
     repository: {
       archive_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/{archive_format}{/ref}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/{archive_format}{/ref}',
       archived: false,
       assignees_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/assignees{/user}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/assignees{/user}',
       blobs_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/git/blobs{/sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/git/blobs{/sha}',
       branches_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/branches{/branch}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/branches{/branch}',
       clone_url:
-        'https://github.com/1natsu172/github-action-auto-card-assign.git',
+        'https://github.com/1natsu172/github-action-auto-move-related-issue.git',
       collaborators_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/collaborators{/collaborator}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/collaborators{/collaborator}',
       comments_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/comments{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/comments{/number}',
       commits_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/commits{/sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/commits{/sha}',
       compare_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/compare/{base}...{head}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/compare/{base}...{head}',
       contents_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/contents/{+path}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/contents/{+path}',
       contributors_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/contributors',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/contributors',
       created_at: '2020-03-30T13:46:29Z',
       default_branch: 'master',
       deployments_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/deployments',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/deployments',
       description:
         'WIP: Assign appropriate assignees by column to card moved on github projects',
       disabled: false,
       downloads_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/downloads',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/downloads',
       events_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/events',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/events',
       fork: false,
       forks: 0,
       forks_count: 0,
       forks_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/forks',
-      full_name: '1natsu172/github-action-auto-card-assign',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/forks',
+      full_name: '1natsu172/github-action-auto-move-related-issue',
       git_commits_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/git/commits{/sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/git/commits{/sha}',
       git_refs_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/git/refs{/sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/git/refs{/sha}',
       git_tags_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/git/tags{/sha}',
-      git_url: 'git://github.com/1natsu172/github-action-auto-card-assign.git',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/git/tags{/sha}',
+      git_url:
+        'git://github.com/1natsu172/github-action-auto-move-related-issue.git',
       has_downloads: true,
       has_issues: true,
       has_pages: false,
@@ -100,22 +101,23 @@ export const context = {
       has_wiki: true,
       homepage: null,
       hooks_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/hooks',
-      html_url: 'https://github.com/1natsu172/github-action-auto-card-assign',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/hooks',
+      html_url:
+        'https://github.com/1natsu172/github-action-auto-move-related-issue',
       id: 251318234,
       issue_comment_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/issues/comments{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/issues/comments{/number}',
       issue_events_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/issues/events{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/issues/events{/number}',
       issues_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/issues{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/issues{/number}',
       keys_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/keys{/key_id}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/keys{/key_id}',
       labels_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/labels{/name}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/labels{/name}',
       language: 'TypeScript',
       languages_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/languages',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/languages',
       license: {
         key: 'mit',
         name: 'MIT License',
@@ -124,14 +126,14 @@ export const context = {
         url: 'https://api.github.com/licenses/mit'
       },
       merges_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/merges',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/merges',
       milestones_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/milestones{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/milestones{/number}',
       mirror_url: null,
-      name: 'github-action-auto-card-assign',
+      name: 'github-action-auto-move-related-issue',
       node_id: 'MDEwOlJlcG9zaXRvcnkyNTEzMTgyMzQ=',
       notifications_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/notifications{?since,all,participating}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/notifications{?since,all,participating}',
       open_issues: 2,
       open_issues_count: 2,
       owner: {
@@ -160,31 +162,33 @@ export const context = {
       },
       private: false,
       pulls_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/pulls{/number}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/pulls{/number}',
       pushed_at: '2020-04-06T08:28:45Z',
       releases_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/releases{/id}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/releases{/id}',
       size: 855,
-      ssh_url: 'git@github.com:1natsu172/github-action-auto-card-assign.git',
+      ssh_url:
+        'git@github.com:1natsu172/github-action-auto-move-related-issue.git',
       stargazers_count: 0,
       stargazers_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/stargazers',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/stargazers',
       statuses_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/statuses/{sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/statuses/{sha}',
       subscribers_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/subscribers',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/subscribers',
       subscription_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/subscription',
-      svn_url: 'https://github.com/1natsu172/github-action-auto-card-assign',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/subscription',
+      svn_url:
+        'https://github.com/1natsu172/github-action-auto-move-related-issue',
       tags_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/tags',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/tags',
       teams_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/teams',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/teams',
       trees_url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign/git/trees{/sha}',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue/git/trees{/sha}',
       updated_at: '2020-04-06T08:28:48Z',
       url:
-        'https://api.github.com/repos/1natsu172/github-action-auto-card-assign',
+        'https://api.github.com/repos/1natsu172/github-action-auto-move-related-issue',
       watchers: 0,
       watchers_count: 0
     },
