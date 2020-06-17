@@ -1,24 +1,28 @@
-import * as core from '@actions/core'
+import {getInput, debug, warning} from '@actions/core'
+import {Context} from '@actions/github/lib/context'
 import {getConfig as getConfigObject} from '@technote-space/github-action-config-helper'
 import isObject from 'lodash.isobject'
 import {Config, ConfigPath} from '../types'
-import {getOctokit} from './getOctokit'
-import {context} from '@actions/github'
+import {GitHub} from '@actions/github'
 
 export function getGitHubToken(): string {
-  const token = core.getInput('github_token')
+  const token = getInput('github_token')
   return token
 }
 
-export async function getConfig(): Promise<Config> {
-  const configPath: ConfigPath = core.getInput('config')
-  const token = getGitHubToken()
-  const octokit = getOctokit(token)
-  core.debug(configPath)
+export async function getConfig({
+  octokit,
+  context
+}: {
+  octokit: GitHub
+  context: Context
+}): Promise<Config> {
+  const configPath: ConfigPath = getInput('config')
+  debug(configPath)
   const config = await getConfigObject(configPath, octokit, context)
 
   if (!config) {
-    core.warning('Please create config file')
+    warning('Please create config file')
   }
 
   if (!isObject(config) || !(config instanceof Object)) {

@@ -1,27 +1,41 @@
-import * as core from "@actions/core";
-import { context } from "@actions/github";
-import { getRelatedIssue } from "./getRelatedIssue";
+import {startGroup, debug, endGroup, getInput} from '@actions/core'
+import {context} from '@actions/github'
+import {getDestination} from './getDestination'
+import {getIssuesOrPullrequests} from './getIssuesOrPullRequestNumbers'
 import {
   isSupportActionEvent,
   isAssignableCard,
   createSkipActionMessage,
-  prettyStringify,
-} from "./utils";
-import { thrownHandler } from "./libs";
+  prettyStringify
+} from './utils'
+import {thrownHandler, getConfig, getOctokit, getGitHubToken} from './libs'
 
 async function run(): Promise<void> {
-  core.startGroup("::debug::context");
-  core.debug(prettyStringify(context));
-  core.endGroup();
-  core.startGroup("::debug::config");
-  core.debug(prettyStringify(core.getInput("config")));
-  core.endGroup();
+  startGroup('::debug::context')
+  debug(prettyStringify(context))
+  debug(prettyStringify(context.repo))
+  endGroup()
+  startGroup('::debug::config')
+  debug(prettyStringify(getInput('config')))
+  endGroup()
 
   try {
-    await getRelatedIssue();
+    const token = getGitHubToken()
+    const octokit = getOctokit(token)
+    const config = await getConfig({context, octokit})
+
+    const issuesOrPullrequests = await getIssuesOrPullrequests({
+      octokit,
+      context
+    })
+
+    const destination = await getDestination({context, config, octokit})
+
+    debug(prettyStringify(issuesOrPullrequests))
+    debug(prettyStringify(destination))
   } catch (error) {
-    thrownHandler(error);
+    thrownHandler(error)
   }
 }
 
-run();
+run()

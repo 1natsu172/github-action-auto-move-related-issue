@@ -1,23 +1,21 @@
 import {getOctokit} from './getOctokit'
 import {getGitHubToken} from './getConfig'
-import {assignableCardInfo} from '../queries/assignableCardInfo.graphql'
+// import {assignableCardInfo} from '../queries/assignableCardInfo.graphql'
 import {AssignableCardInfo} from '../types'
 
-export async function getAssignableCardInfo(
-  id: string
-): Promise<AssignableCardInfo> {
+export async function getAssignableCardInfo(id: string): Promise<any> {
   const token = getGitHubToken()
   const octokit = getOctokit(token)
 
-  try {
-    const res = await octokit.graphql({
-      query: assignableCardInfo,
-      id
-    })
-    return res as AssignableCardInfo
-  } catch (error) {
-    throw Error(error)
-  }
+  // try {
+  //   const res = await octokit.graphql({
+  //     query: assignableCardInfo,
+  //     id
+  //   })
+  //   return res as AssignableCardInfo
+  // } catch (error) {
+  //   throw Error(error)
+  // }
 }
 
 export function getAssignableCardNodeId(obj: AssignableCardInfo): string {
