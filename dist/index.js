@@ -10311,7 +10311,7 @@ const core_1 = __webpack_require__(470);
 const utils_1 = __webpack_require__(95);
 function thrownHandler(error) {
     core_1.error(utils_1.prettyStringify(error));
-    if (utils_1.isSkipAction(error.message)) {
+    if (utils_1.isSkipAction(error === null || error === void 0 ? void 0 : error.message)) {
         core_1.info(error.message);
         process.exitCode = core_1.ExitCode.Success;
     }
@@ -12203,7 +12203,7 @@ function getIssuesOrPullrequests(params) {
         const { owner, repo } = getRepoInfo_1.getRepoInfo(context);
         const issueOrPullRequestNumbers = libs_1.getRelatedIssueNumber({ context });
         try {
-            const fetched = yield Promise.all(issueOrPullRequestNumbers.map((issueOrPullRequestNumber) => __awaiter(this, void 0, void 0, function* () {
+            const fetched = yield Promise.allSettled(issueOrPullRequestNumbers.map((issueOrPullRequestNumber) => __awaiter(this, void 0, void 0, function* () {
                 return yield libs_1.getIssueOrPullrequest({
                     octokit,
                     ownerLogin: owner,
@@ -12211,7 +12211,9 @@ function getIssuesOrPullrequests(params) {
                     issueOrPullRequestNumber
                 });
             })));
-            return fetched.filter((item) => item !== null);
+            const fulfilleds = fetched.filter((item) => item.status === 'fulfilled' && item.value !== null);
+            const pickedValues = fulfilleds.map((o) => o.value);
+            return pickedValues;
         }
         catch (error) {
             throw Error(error);
