@@ -15,7 +15,7 @@ export async function getIssuesOrPullrequests(params: {
   const issueOrPullRequestNumbers = getRelatedIssueNumber({context})
 
   try {
-    const fetched = await Promise.all(
+    const fetched = await Promise.allSettled(
       issueOrPullRequestNumbers.map(
         async (issueOrPullRequestNumber) =>
           await getIssueOrPullrequest({
@@ -26,9 +26,15 @@ export async function getIssuesOrPullrequests(params: {
           })
       )
     )
-    return fetched.filter(
-      (item): item is NonNullable<RepositoryIssueOrPullRequest> => item !== null
+    const fulfilleds = fetched.filter(
+      (
+        item
+      ): item is PromiseFulfilledResult<
+        NonNullable<RepositoryIssueOrPullRequest>
+      > => item.status === 'fulfilled' && item.value !== null
     )
+    const pickedValues = fulfilleds.map((o) => o.value)
+    return pickedValues
   } catch (error) {
     throw Error(error)
   }
