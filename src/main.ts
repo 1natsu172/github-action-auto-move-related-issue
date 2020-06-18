@@ -4,7 +4,6 @@ import {getDestination} from './getDestination'
 import {getIssuesOrPullrequests} from './getIssuesOrPullRequestNumbers'
 import {
   isSupportActionEvent,
-  isAssignableCard,
   createSkipActionMessage,
   prettyStringify
 } from './utils'
