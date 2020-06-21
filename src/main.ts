@@ -1,7 +1,10 @@
 import {startGroup, debug, endGroup, getInput} from '@actions/core'
 import {context} from '@actions/github'
-import {getDestination} from './getDestination'
-import {getIssuesOrPullrequests} from './getIssuesOrPullRequestNumbers'
+import {
+  getDestination,
+  getIssuesOrPullrequests,
+  moveIssuesOrPullRequests
+} from './services'
 import {
   isSupportActionEvent,
   createSkipActionMessage,
@@ -23,15 +26,23 @@ async function run(): Promise<void> {
     const octokit = getOctokit(token)
     const config = await getConfig({context, octokit})
 
-    const issuesOrPullrequests = await getIssuesOrPullrequests({
+    const relatedIssuesOrPullrequests = await getIssuesOrPullrequests({
       octokit,
       context
     })
 
-    const destination = await getDestination({context, config, octokit})
+    const targetColumn = await getDestination({context, config, octokit})
 
-    debug(prettyStringify(issuesOrPullrequests))
-    debug(prettyStringify(destination))
+    const moveResult = await moveIssuesOrPullRequests({
+      octokit,
+      config,
+      targetColumnId: targetColumn.id,
+      issuesOrPullrequests: relatedIssuesOrPullrequests
+    })
+
+    debug(prettyStringify(relatedIssuesOrPullrequests))
+    debug(prettyStringify(targetColumn))
+    debug(prettyStringify(moveResult))
   } catch (error) {
     thrownHandler(error)
   }

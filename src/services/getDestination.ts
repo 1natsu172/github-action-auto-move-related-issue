@@ -1,6 +1,6 @@
 import {GitHub} from '@actions/github'
-import {resolveTargetColumn, resolveTargetProject} from './libs'
-import {Config} from './types'
+import {resolveTargetColumn, resolveTargetProject} from '../libs'
+import {Config} from '../types'
 import {Context} from '@actions/github/lib/context'
 import {AsyncReturnType} from 'type-fest'
 

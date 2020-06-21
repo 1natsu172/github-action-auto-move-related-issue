@@ -6,11 +6,27 @@ export const repositoryIssueOrPullRequest = `
           __typename
           id
           number
+          projectCards {
+            nodes {
+              id
+              project{
+                name
+              }
+            }
+          }
         }
         ... on Issue {
           __typename
           id
           number
+          projectCards {
+            nodes {
+              id
+              project{
+                name
+              }
+            }
+          }
         }
       }
     }

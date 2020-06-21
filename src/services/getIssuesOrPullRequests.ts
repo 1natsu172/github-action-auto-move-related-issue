@@ -1,8 +1,8 @@
 import {GitHub} from '@actions/github'
-import {getRelatedIssueNumber, getIssueOrPullrequest} from './libs'
-import {RepositoryIssueOrPullRequest} from './types'
+import {getRelatedIssueNumber, getIssueOrPullrequest} from '../libs'
+import {RepositoryIssueOrPullRequest} from '../types'
 import {Context} from '@actions/github/lib/context'
-import {getRepoInfo} from './libs/getRepoInfo'
+import {getRepoInfo} from '../libs/getRepoInfo'
 
 export async function getIssuesOrPullrequests(params: {
   octokit: GitHub
