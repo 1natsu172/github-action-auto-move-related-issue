@@ -1,9 +1,0 @@
-test-project:
-  To Do:
-    - "assignee_test_todo1"
-  In progress:
-    - "assignee_inP1"
-  Done:
-    - "assignee_done1"
-    - "assignee_done2"
-  All Remove: []

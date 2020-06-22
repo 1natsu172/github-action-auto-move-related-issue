@@ -8,7 +8,7 @@ inputs:
     required: true
   config:
     description: "This Action's config."
-    default: "auto-move-related-issue.yml"
+    default: "auto-move-related-issue-config.yml"
     required: true
 branding:
   icon: "user-check"
