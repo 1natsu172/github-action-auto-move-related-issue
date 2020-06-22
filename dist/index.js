@@ -332,49 +332,6 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 13:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkConfiguredColumn = void 0;
-function checkConfiguredColumn(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // const {projectName, columnName} = params
-        // const config = await getConfig()
-        // const isConfiguredProjectName = projectName in config
-        // if (!isConfiguredProjectName) {
-        //   throw Error(
-        //     createSkipActionMessage(
-        //       `The project name "${projectName}" is not defined in the config.`
-        //     )
-        //   )
-        // }
-        // const isConfiguredColumnName = columnName in config[projectName]
-        // if (!isConfiguredColumnName) {
-        //   throw Error(
-        //     createSkipActionMessage(
-        //       `The column name "${columnName}" is not defined in the config.`
-        //     )
-        //   )
-        // }
-    });
-}
-exports.checkConfiguredColumn = checkConfiguredColumn;
-
-
-/***/ }),
-
 /***/ 15:
 /***/ (function(module) {
 
@@ -1080,51 +1037,6 @@ function whichSync (cmd, opt) {
 
 /***/ }),
 
-/***/ 71:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDestination = void 0;
-const libs_1 = __webpack_require__(434);
-function getDestination(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { octokit, context, config } = params;
-        const targetProjectNode = yield libs_1.resolveTargetProject({
-            config,
-            octokit,
-            context
-        });
-        if (!targetProjectNode) {
-            throw new Error('can not find your target github-project');
-        }
-        const targetProjectColumn = yield libs_1.resolveTargetColumn({
-            config,
-            context,
-            octokit,
-            projectNumber: targetProjectNode.number
-        });
-        if (!targetProjectColumn) {
-            throw new Error('can not find your target column in the project');
-        }
-        return targetProjectColumn;
-    });
-}
-exports.getDestination = getDestination;
-
-
-/***/ }),
-
 /***/ 82:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -1345,10 +1257,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(__webpack_require__(513), exports);
-__exportStar(__webpack_require__(13), exports);
 __exportStar(__webpack_require__(508), exports);
 __exportStar(__webpack_require__(90), exports);
-__exportStar(__webpack_require__(107), exports);
 __exportStar(__webpack_require__(490), exports);
 
 
@@ -1387,27 +1297,6 @@ module.exports = new Type('tag:yaml.org,2002:set', {
   resolve: resolveYamlSet,
   construct: constructYamlSet
 });
-
-
-/***/ }),
-
-/***/ 107:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAssignableCard = void 0;
-const github_1 = __webpack_require__(469);
-/**
- * @description
- * AssignableCard(PR/Issue)'s note is `null`
- */ function isAssignableCard() {
-    var _a, _b;
-    const projectCardNote = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.project_card) === null || _b === void 0 ? void 0 : _b.note;
-    return projectCardNote === null;
-}
-exports.isAssignableCard = isAssignableCard;
 
 
 /***/ }),
@@ -3053,8 +2942,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = __webpack_require__(470);
 const github_1 = __webpack_require__(469);
-const getDestination_1 = __webpack_require__(71);
-const getIssuesOrPullRequestNumbers_1 = __webpack_require__(655);
+const services_1 = __webpack_require__(504);
 const utils_1 = __webpack_require__(95);
 const libs_1 = __webpack_require__(434);
 function run() {
@@ -3070,13 +2958,20 @@ function run() {
             const token = libs_1.getGitHubToken();
             const octokit = libs_1.getOctokit(token);
             const config = yield libs_1.getConfig({ context: github_1.context, octokit });
-            const issuesOrPullrequests = yield getIssuesOrPullRequestNumbers_1.getIssuesOrPullrequests({
+            const relatedIssuesOrPullrequests = yield services_1.getIssuesOrPullrequests({
                 octokit,
                 context: github_1.context
             });
-            const destination = yield getDestination_1.getDestination({ context: github_1.context, config, octokit });
-            core_1.debug(utils_1.prettyStringify(issuesOrPullrequests));
-            core_1.debug(utils_1.prettyStringify(destination));
+            const targetColumn = yield services_1.getDestination({ context: github_1.context, config, octokit });
+            const moveResult = yield services_1.moveIssuesOrPullRequests({
+                octokit,
+                config,
+                targetColumnId: targetColumn.id,
+                issuesOrPullrequests: relatedIssuesOrPullrequests
+            });
+            core_1.debug(utils_1.prettyStringify(relatedIssuesOrPullrequests));
+            core_1.debug(utils_1.prettyStringify(targetColumn));
+            core_1.debug(utils_1.prettyStringify(moveResult));
         }
         catch (error) {
             libs_1.thrownHandler(error);
@@ -3564,6 +3459,67 @@ function register (state, name, method, options) {
 
 /***/ }),
 
+/***/ 283:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.moveIssuesOrPullRequests = void 0;
+const core_1 = __webpack_require__(470);
+const getIssueOrPullRequestCardNode_1 = __webpack_require__(979);
+function moveIssuesOrPullRequests(params) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { octokit, config, issuesOrPullrequests, targetColumnId } = params;
+        const { projectName } = config;
+        const cardNodes = issuesOrPullrequests.map((issueOrPullRequest) => getIssueOrPullRequestCardNode_1.getIssueOrPullRequestCardNode({
+            repositoryIssueOrPullRequest: issueOrPullRequest,
+            targetProjectName: projectName
+        }));
+        const moved = yield Promise.allSettled(cardNodes.map((node) => {
+            return node;
+            // if already existed card on the project-board
+            // if (node.cardNodeId) {
+            //   return moveProjectCard({
+            //     octokit,
+            //     cardId: node.cardNodeId,
+            //     columnId: targetColumnId,
+            //     issueOrPullRequestNumber: node.issueOrPullRequestNumber
+            //   })
+            // } else {
+            //   return addProjectCard({
+            //     octokit,
+            //     projectColumnId: targetColumnId,
+            //     issueOrPullRequestId: node.issueOrPullRequestNodeId,
+            //     issueOrPullRequestNumber: node.issueOrPullRequestNumber
+            //   })
+            // }
+        }));
+        const rejectedReasons = moved
+            .filter((res) => res.status === 'rejected')
+            .map((n) => n.reason);
+        if (rejectedReasons.length) {
+            for (const reason of rejectedReasons) {
+                core_1.error(reason);
+            }
+        }
+        return moved;
+    });
+}
+exports.moveIssuesOrPullRequests = moveIssuesOrPullRequests;
+
+
+/***/ }),
+
 /***/ 293:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -3955,11 +3911,27 @@ exports.repositoryIssueOrPullRequest = `
           __typename
           id
           number
+          projectCards {
+            nodes {
+              id
+              project{
+                name
+              }
+            }
+          }
         }
         ... on Issue {
           __typename
           id
           number
+          projectCards {
+            nodes {
+              id
+              project{
+                name
+              }
+            }
+          }
         }
       }
     }
@@ -4390,48 +4362,6 @@ module.exports = new Type('tag:yaml.org,2002:js/function', {
   predicate: isFunction,
   represent: representJavascriptFunction
 });
-
-
-/***/ }),
-
-/***/ 356:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAssignableCardNodeId = exports.getAssignableCardInfo = void 0;
-const getOctokit_1 = __webpack_require__(946);
-const getConfig_1 = __webpack_require__(695);
-function getAssignableCardInfo(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const token = getConfig_1.getGitHubToken();
-        const octokit = getOctokit_1.getOctokit(token);
-        // try {
-        //   const res = await octokit.graphql({
-        //     query: assignableCardInfo,
-        //     id
-        //   })
-        //   return res as AssignableCardInfo
-        // } catch (error) {
-        //   throw Error(error)
-        // }
-    });
-}
-exports.getAssignableCardInfo = getAssignableCardInfo;
-function getAssignableCardNodeId(obj) {
-    return obj.node.content.id;
-}
-exports.getAssignableCardNodeId = getAssignableCardNodeId;
 
 
 /***/ }),
@@ -5340,9 +5270,6 @@ __exportStar(__webpack_require__(592), exports);
 __exportStar(__webpack_require__(721), exports);
 __exportStar(__webpack_require__(881), exports);
 __exportStar(__webpack_require__(378), exports);
-__exportStar(__webpack_require__(493), exports);
-__exportStar(__webpack_require__(356), exports);
-__exportStar(__webpack_require__(691), exports);
 __exportStar(__webpack_require__(587), exports);
 
 
@@ -9253,8 +9180,31 @@ exports.prettyStringify = prettyStringify;
 
 /***/ }),
 
-/***/ 493:
-/***/ (function(__unusedmodule, exports) {
+/***/ 504:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(775), exports);
+__exportStar(__webpack_require__(507), exports);
+__exportStar(__webpack_require__(283), exports);
+
+
+/***/ }),
+
+/***/ 507:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
 
@@ -9268,47 +9218,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAssigneesLoginFromConfig = void 0;
-function getAssigneesLoginFromConfig(params) {
+exports.getIssuesOrPullrequests = void 0;
+const libs_1 = __webpack_require__(434);
+const getRepoInfo_1 = __webpack_require__(975);
+function getIssuesOrPullrequests(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        //   const {projectName, columnName} = params
-        //   const config = await getConfig()
-        //   try {
-        //     await checkConfiguredColumn({projectName, columnName})
-        //   } catch (error) {
-        //     throw Error(error)
-        //   }
-        //   return config[projectName][columnName]
-        // }
-        // export async function getAssigneesUserInfo(
-        //   assigneesLogin: string[]
-        // ): Promise<UserInfo[]> {
-        //   const token = getGitHubToken()
-        //   const octokit = getOctokit(token)
-        //   try {
-        //     return Promise.all(
-        //       assigneesLogin.map(
-        //         async (assigneeLogin) =>
-        //           (await octokit.graphql({
-        //             query: userInfo,
-        //             login: assigneeLogin
-        //           })) as UserInfo
-        //       )
-        //     )
-        //   } catch (error) {
-        //     throw Error(error)
-        //   }
-        // }
-        // export function getAssigneesNodeIdFromUserInfo(params: UserInfo[]): string[] {
-        //   return params.map((u) => u.user.id)
-        // }
-        // export function getAssigneesNodeIdFromAssignableCardInfo(
-        //   obj: AssignableCardInfo
-        // ): string[] {
-        //   return obj.node.content.assignees.nodes.map((n) => n.id)
+        const { octokit, context } = params;
+        const { owner, repo } = getRepoInfo_1.getRepoInfo(context);
+        const issueOrPullRequestNumbers = libs_1.getRelatedIssueNumber({ context });
+        try {
+            const fetched = yield Promise.allSettled(issueOrPullRequestNumbers.map((issueOrPullRequestNumber) => __awaiter(this, void 0, void 0, function* () {
+                return yield libs_1.getIssueOrPullrequest({
+                    octokit,
+                    ownerLogin: owner,
+                    repoName: repo,
+                    issueOrPullRequestNumber
+                });
+            })));
+            const fulfilleds = fetched.filter((item) => item.status === 'fulfilled' && item.value !== null);
+            const pickedValues = fulfilleds.map((o) => o.value);
+            return pickedValues;
+        }
+        catch (error) {
+            throw Error(error);
+        }
     });
 }
-exports.getAssigneesLoginFromConfig = getAssigneesLoginFromConfig;
+exports.getIssuesOrPullrequests = getIssuesOrPullrequests;
 
 
 /***/ }),
@@ -12179,52 +12115,6 @@ if (process.platform === 'linux') {
 
 /***/ }),
 
-/***/ 655:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIssuesOrPullrequests = void 0;
-const libs_1 = __webpack_require__(434);
-const getRepoInfo_1 = __webpack_require__(975);
-function getIssuesOrPullrequests(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { octokit, context } = params;
-        const { owner, repo } = getRepoInfo_1.getRepoInfo(context);
-        const issueOrPullRequestNumbers = libs_1.getRelatedIssueNumber({ context });
-        try {
-            const fetched = yield Promise.allSettled(issueOrPullRequestNumbers.map((issueOrPullRequestNumber) => __awaiter(this, void 0, void 0, function* () {
-                return yield libs_1.getIssueOrPullrequest({
-                    octokit,
-                    ownerLogin: owner,
-                    repoName: repo,
-                    issueOrPullRequestNumber
-                });
-            })));
-            const fulfilleds = fetched.filter((item) => item.status === 'fulfilled' && item.value !== null);
-            const pickedValues = fulfilleds.map((o) => o.value);
-            return pickedValues;
-        }
-        catch (error) {
-            throw Error(error);
-        }
-    });
-}
-exports.getIssuesOrPullrequests = getIssuesOrPullrequests;
-
-
-/***/ }),
-
 /***/ 669:
 /***/ (function(module) {
 
@@ -13159,23 +13049,6 @@ module.exports.safeDump = safeDump;
 
 /***/ }),
 
-/***/ 691:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProjectCardNodeId = void 0;
-const github_1 = __webpack_require__(469);
-function getProjectCardNodeId() {
-    var _a, _b;
-    return (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.project_card) === null || _b === void 0 ? void 0 : _b.node_id;
-}
-exports.getProjectCardNodeId = getProjectCardNodeId;
-
-
-/***/ }),
-
 /***/ 692:
 /***/ (function(__unusedmodule, exports) {
 
@@ -13767,6 +13640,51 @@ module.exports.sync = spawnSync;
 
 module.exports._parse = parse;
 module.exports._enoent = enoent;
+
+
+/***/ }),
+
+/***/ 775:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDestination = void 0;
+const libs_1 = __webpack_require__(434);
+function getDestination(params) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { octokit, context, config } = params;
+        const targetProjectNode = yield libs_1.resolveTargetProject({
+            config,
+            octokit,
+            context
+        });
+        if (!targetProjectNode) {
+            throw new Error('can not find your target github-project');
+        }
+        const targetProjectColumn = yield libs_1.resolveTargetColumn({
+            config,
+            context,
+            octokit,
+            projectNumber: targetProjectNode.number
+        });
+        if (!targetProjectColumn) {
+            throw new Error('can not find your target column in the project');
+        }
+        return targetProjectColumn;
+    });
+}
+exports.getDestination = getDestination;
 
 
 /***/ }),
@@ -30564,6 +30482,28 @@ function getRepoInfo(context) {
     return context.repo;
 }
 exports.getRepoInfo = getRepoInfo;
+
+
+/***/ }),
+
+/***/ 979:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getIssueOrPullRequestCardNode = void 0;
+function getIssueOrPullRequestCardNode(params) {
+    const { repositoryIssueOrPullRequest, targetProjectName } = params;
+    const { id: issueOrPullRequestNodeId, number: issueOrPullRequestNumber, projectCards } = repositoryIssueOrPullRequest.repository.issueOrPullRequest;
+    const [targetCardNode] = projectCards.nodes.filter((node) => (node === null || node === void 0 ? void 0 : node.project.name) === targetProjectName);
+    return {
+        issueOrPullRequestNodeId,
+        issueOrPullRequestNumber,
+        cardNodeId: targetCardNode === null || targetCardNode === void 0 ? void 0 : targetCardNode.id
+    };
+}
+exports.getIssueOrPullRequestCardNode = getIssueOrPullRequestCardNode;
 
 
 /***/ }),
