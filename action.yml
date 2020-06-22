@@ -1,5 +1,5 @@
 name: "auto-move-related-issue"
-description: "TODO"
+description: "Move the open-issue described in the \"Issue\" paragraph to a specific project column."
 author: "1natsu172"
 inputs:
   github_token:
