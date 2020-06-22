@@ -1,6 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {context} from '@actions/github'
-import {SUPPORT_ACTION_EVENT} from '../constants'
+import {SUPPORT_WEBHOOK_EVENT} from '../constants'
 import {isSupportActionEvent} from './isSupportActionEvent'
 import {mockGitHubContext} from '../../__tests__/mock/actions-github.mock'
 import {createDummyGitHubContext} from '../../__tests__/helper/githubContextHelper'
@@ -8,12 +7,12 @@ import {createDummyGitHubContext} from '../../__tests__/helper/githubContextHelp
 mockGitHubContext()
 
 describe('isSupportActionEvent', () => {
-  test.each(SUPPORT_ACTION_EVENT)(
+  test.each(SUPPORT_WEBHOOK_EVENT)(
     'Should be return true by supported events: %p',
     (actionEvent) => {
       // @ts-ignore
       context = createDummyGitHubContext({
-        payload: {project_card: {}, action: actionEvent}
+        eventName: actionEvent
       })
       expect(isSupportActionEvent()).toBe(true)
     }
@@ -22,7 +21,7 @@ describe('isSupportActionEvent', () => {
   test('Should be return false by un-supported event', () => {
     // @ts-ignore
     context = createDummyGitHubContext({
-      payload: {project_card: {}, action: 'push'}
+      eventName: 'issue_comment'
     })
     expect(isSupportActionEvent()).toBe(false)
   })
