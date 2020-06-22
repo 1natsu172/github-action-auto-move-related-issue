@@ -4,9 +4,12 @@
 
 # GitHub Actions auto-move-related-issue
 
-This is GitHub Actions that sets Assignees on the card for each column of GitHub Project.
+This is GitHub Actions that move the open-issue described in the "Issue" paragraph to a specific project column.
 
-Supporting action triggers work when create or move an Issue/PullRequest card or convert a note to an Issue card.
+The supported action webhook events are `issues` | `pull_request`.
+
+> Note: The development is primarily focused on `closed` events, so it may not work with certain event triggers.
+
 
 ## Screenshot
 ![DEMO GIF](https://raw.githubusercontent.com/1natsu172/github-action-auto-move-related-issue/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/demo.gif)
@@ -18,97 +21,104 @@ Supporting action triggers work when create or move an Issue/PullRequest card or
 example `.github/workflows/auto-move-related-issue.yml`
 
 ```yaml
-name: "Auto card assign"
+name: "Auto move related issue"
 on:
-  project_card:
-    types: ["created", "moved", "converted"]
+  pull_request:
+    types: [closed]
 
 jobs:
-  card_assign:
+  auto-move-related-issue:
     runs-on: ubuntu-latest
     steps:
       - uses: 1natsu172/github-action-auto-move-related-issue@v1
-        id: card_assign_action
+        id: auto-move-related-issue_action
         with:
           # github_token: "${{ secrets.GITHUB_TOKEN }}"
-          config: "auto-move-related-issue.yml"
+          config: "auto-move-related-issue-config.yml"
+```
+
+・Tips
+
+If you only want to run the pull_request on merged, you can write the steps configuration as follows.
+
+```yaml
+    steps:
+      - uses: 1natsu172/github-action-auto-move-related-issue@v1
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        id: auto-move-related-issue_action
+        with:
+          # github_token: "${{ secrets.GITHUB_TOKEN }}"
+          config: "auto-move-related-issue-config.yml"
 ```
 
 ・ `with` options
 
-|     name     | description      |          default          | required |            e.g.             |
-| :----------: | :--------------- | :-----------------------: | :------: | :-------------------------: |
-|    config    | Config file name | `auto-move-related-issue.yml` |   true   |  `auto-move-related-issue-config.yml`   |
-| github_token | Access token     |    `${{github.token}}`    |   true   | `${{secrets.ACCESS_TOKEN}}` |
+| name         | description      | default                              | required | e.g.                               |
+| :----------: | ---------------- | :----------------------------------: | :------: | :--------------------------------: |
+| config       | Config file name | `auto-move-related-issue-config.yml` | true     | `move-related-issue-on-merged.yml` |
+| github_token | Access token     | `${{github.token}}`                  | true     | `${{secrets.ACCESS_TOKEN}}`        |
 
-### Configure assignees for each project column
+### Configure target project and column names
 
-example `.github/auto-move-related-issue.yml`
+example `.github/auto-move-related-issue-config.yml`
 
 ```yaml
-kanban1: # Project name
-  To do: # Column name
-    - "memberName1" # Login name(assignee name)
-  In progress:
-    - "memberName2"
-  Review in progress:
-    - "memberName3"
-  Reviewer approved:
-    - "memberName1"
-    - "memberName2"
-    - "memberName3"
-  Done: []
+projectName: "kanban1"
+columnName: "Review in progress"
 ```
 
+### Please write an `Issue` paragraph in your Issue or PullRequest content
+
+**Must write `Issue` paragraph and Issue or PullRequest number or url**
+
+example
+
+```markdown
+# Issue
+
+#1
+#3
+https://github.com/sushi-kun/github-projects-lab/issues/5
+
+# Summary
+
+.
+.
+.
+```
+
+**This action support single project and single column target.**
+
 ## Config rules
-
-### Follow the config format
-
-* Please write yaml
-  * [configure example](https://codebeautify.org/yaml-to-json-xml-csv/cbf4517b)
-  * Type definition of [Config](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/master/src/types/config.ts) = Result of [yaml to json](https://codebeautify.org/yaml-to-json-xml-csv#)
-  * assignee names are expressed a `string[]`
 
 ### Write the exact name
 
 According to the image below.
 
 ![project name and column name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/project-and-column-name.png?raw=true)
-![login name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/login-name.png?raw=true)
-
-**Be careful!**
-
-* Don't add prefix `@` for login name
-* Write the expected assignees for the column
-  * The Assignees before the move will be deleted
 
 ## Behavior
 
-The assignees before the move do not remain and update with the expect assignees of the column.
+Only the Issue or PullRequest number or url in the issue paragraph will be targeted. It also ignores issues that have been given keywords to close.
+
+> ref: [Closing issues using keywords](https://help.github.com/en/enterprise/2.16/user/github/managing-your-work-on-github/closing-issues-using-keywords)
+
+Support for Issue or PullRequest that has not been added to the target project. It is automatically added to the target column even if it has not been added to the project.
 
 ## FAQ
 
-### ・How can I set 0(empty) Assignees?
+### ・Not moved or some Issue or PullRequest is not moved.
 
-Please configure as an empty array = `[]`
-
-### ・Will the assignees before the card move remain after the move?
-
-No, all assignees before the move will be removed.
-
-### ・What happens if move a card to an unconfigured column?
-
-The action itself is successful and the assignment process is skipped.
-
+Do you have any extra information in your Issue paragraph other than a number or URL?
+It is recommended to describe Issue paragraph as simply as possible, with only the number and URL.
 
 
 ## Support action trigger events
 
-|  eventName   | action types |
+| eventName    | action types |
 | :----------: | :----------: |
-| project_card |    moved     |
-| project_card |   created    |
-| project_card |  converted   |
+| issues       | any          |
+| pull_request | any          |
 
 ## Versioning
 
