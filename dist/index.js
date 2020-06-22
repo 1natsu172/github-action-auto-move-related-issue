@@ -1260,6 +1260,7 @@ __exportStar(__webpack_require__(513), exports);
 __exportStar(__webpack_require__(508), exports);
 __exportStar(__webpack_require__(90), exports);
 __exportStar(__webpack_require__(490), exports);
+__exportStar(__webpack_require__(404), exports);
 
 
 /***/ }),
@@ -3477,6 +3478,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.moveIssuesOrPullRequests = void 0;
 const core_1 = __webpack_require__(470);
 const getIssueOrPullRequestCardNode_1 = __webpack_require__(979);
+const usecases_1 = __webpack_require__(878);
+const utils_1 = __webpack_require__(95);
 function moveIssuesOrPullRequests(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const { octokit, config, issuesOrPullrequests, targetColumnId } = params;
@@ -3486,32 +3489,25 @@ function moveIssuesOrPullRequests(params) {
             targetProjectName: projectName
         }));
         const moved = yield Promise.allSettled(cardNodes.map((node) => {
-            return node;
             // if already existed card on the project-board
-            // if (node.cardNodeId) {
-            //   return moveProjectCard({
-            //     octokit,
-            //     cardId: node.cardNodeId,
-            //     columnId: targetColumnId,
-            //     issueOrPullRequestNumber: node.issueOrPullRequestNumber
-            //   })
-            // } else {
-            //   return addProjectCard({
-            //     octokit,
-            //     projectColumnId: targetColumnId,
-            //     issueOrPullRequestId: node.issueOrPullRequestNodeId,
-            //     issueOrPullRequestNumber: node.issueOrPullRequestNumber
-            //   })
-            // }
-        }));
-        const rejectedReasons = moved
-            .filter((res) => res.status === 'rejected')
-            .map((n) => n.reason);
-        if (rejectedReasons.length) {
-            for (const reason of rejectedReasons) {
-                core_1.error(reason);
+            if (node.cardNodeId) {
+                return usecases_1.moveProjectCard({
+                    octokit,
+                    cardId: node.cardNodeId,
+                    columnId: targetColumnId,
+                    issueOrPullRequestNumber: node.issueOrPullRequestNumber
+                });
             }
-        }
+            else {
+                return usecases_1.addProjectCard({
+                    octokit,
+                    projectColumnId: targetColumnId,
+                    issueOrPullRequestId: node.issueOrPullRequestNodeId,
+                    issueOrPullRequestNumber: node.issueOrPullRequestNumber
+                });
+            }
+        }));
+        utils_1.promiseRejectedReasonHandler(moved, core_1.error);
         return moved;
     });
 }
@@ -4934,6 +4930,28 @@ function Octokit(plugins, options) {
 
   return api;
 }
+
+
+/***/ }),
+
+/***/ 404:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.promiseRejectedReasonHandler = void 0;
+function promiseRejectedReasonHandler(promiseSettledResult, handle) {
+    const rejectedReasons = promiseSettledResult
+        .filter((res) => res.status === 'rejected')
+        .map((n) => n.reason);
+    if (rejectedReasons.length) {
+        for (const reason of rejectedReasons) {
+            handle(reason);
+        }
+    }
+}
+exports.promiseRejectedReasonHandler = promiseRejectedReasonHandler;
 
 
 /***/ }),
@@ -9219,8 +9237,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getIssuesOrPullrequests = void 0;
+const core_1 = __webpack_require__(470);
 const libs_1 = __webpack_require__(434);
 const getRepoInfo_1 = __webpack_require__(975);
+const utils_1 = __webpack_require__(95);
 function getIssuesOrPullrequests(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const { octokit, context } = params;
@@ -9235,12 +9255,17 @@ function getIssuesOrPullrequests(params) {
                     issueOrPullRequestNumber
                 });
             })));
+            /**
+             * filter the only existed issueOrPullRequest on the GitHub repository
+             * consider the mistake typed issue number.
+             */
             const fulfilleds = fetched.filter((item) => item.status === 'fulfilled' && item.value !== null);
+            utils_1.promiseRejectedReasonHandler(fetched, core_1.error);
             const pickedValues = fulfilleds.map((o) => o.value);
             return pickedValues;
         }
-        catch (error) {
-            throw Error(error);
+        catch (err) {
+            throw Error(err);
         }
     });
 }
@@ -9334,6 +9359,51 @@ function isSupportActionEvent() {
     return hasProjectCardContext && isSupportEvent;
 }
 exports.isSupportActionEvent = isSupportActionEvent;
+
+
+/***/ }),
+
+/***/ 517:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addProjectCard = void 0;
+const core_1 = __webpack_require__(470);
+const utils_1 = __webpack_require__(95);
+const addProjectCard_graphql_1 = __webpack_require__(746);
+function addProjectCard(params) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { octokit, projectColumnId, issueOrPullRequestId, issueOrPullRequestNumber } = params;
+        core_1.info(`addProjectCard:try:' ${utils_1.prettyStringify({
+            issueOrPullRequestId,
+            issueOrPullRequestNumber
+        })}`);
+        try {
+            const res = yield octokit.graphql({
+                query: addProjectCard_graphql_1.addProjectCard,
+                projectColumnId,
+                contentId: issueOrPullRequestId
+            });
+            core_1.info(`addProjectCard:res: ${utils_1.prettyStringify(res)}`);
+            return res;
+        }
+        catch (error) {
+            throw Error(error);
+        }
+    });
+}
+exports.addProjectCard = addProjectCard;
 
 
 /***/ }),
@@ -10088,6 +10158,40 @@ const getPage = __webpack_require__(265)
 function getNextPage (octokit, link, headers) {
   return getPage(octokit, link, 'next', headers)
 }
+
+
+/***/ }),
+
+/***/ 553:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.moveProjectCard = void 0;
+exports.moveProjectCard = `
+  mutation moveProjectCard(
+    $cardId: ID!
+    $columnId: ID!
+  ) {
+    moveProjectCard(
+      input: {
+        cardId: $cardId
+        columnId: $columnId
+      }
+    ) {
+      __typename
+      cardEdge {
+        node {
+          id
+          column {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 
 
 /***/ }),
@@ -12041,6 +12145,51 @@ module.exports = new Type('tag:yaml.org,2002:merge', {
 
 /***/ }),
 
+/***/ 648:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.moveProjectCard = void 0;
+const core_1 = __webpack_require__(470);
+const utils_1 = __webpack_require__(95);
+const moveProjectCard_graphql_1 = __webpack_require__(553);
+function moveProjectCard(params) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { octokit, columnId, cardId, issueOrPullRequestNumber } = params;
+        core_1.info(`moveProjectCard:try:' ${utils_1.prettyStringify({
+            cardId,
+            issueOrPullRequestNumber
+        })}`);
+        try {
+            const res = yield octokit.graphql({
+                query: moveProjectCard_graphql_1.moveProjectCard,
+                cardId,
+                columnId
+            });
+            core_1.info(`moveProjectCard:res: ${utils_1.prettyStringify(res)}`);
+            return res;
+        }
+        catch (error) {
+            throw Error(error);
+        }
+    });
+}
+exports.moveProjectCard = moveProjectCard;
+
+
+/***/ }),
+
 /***/ 649:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -13347,6 +13496,37 @@ function sync (path, options) {
     }
   }
 }
+
+
+/***/ }),
+
+/***/ 746:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addProjectCard = void 0;
+exports.addProjectCard = `
+  mutation addProjectCard(
+    $projectColumnId: ID!
+    $contentId: ID
+  ) {
+    addProjectCard(
+      input: { projectColumnId: $projectColumnId, contentId: $contentId }
+    ) {
+      __typename
+      cardEdge {
+        node {
+          id
+          column {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 
 
 /***/ }),
@@ -28200,6 +28380,28 @@ function removeHook (state, name, method) {
 
   state.registry[name].splice(index, 1)
 }
+
+
+/***/ }),
+
+/***/ 878:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(517), exports);
+__exportStar(__webpack_require__(648), exports);
 
 
 /***/ }),
