@@ -1,8 +1,10 @@
+import {error} from '@actions/core'
 import {GitHub} from '@actions/github'
 import {getRelatedIssueNumber, getIssueOrPullrequest} from '../libs'
 import {RepositoryIssueOrPullRequest} from '../types'
 import {Context} from '@actions/github/lib/context'
 import {getRepoInfo} from '../libs/getRepoInfo'
+import {promiseRejectedReasonHandler} from '../utils'
 
 export async function getIssuesOrPullrequests(params: {
   octokit: GitHub
@@ -26,6 +28,11 @@ export async function getIssuesOrPullrequests(params: {
           })
       )
     )
+
+    /**
+     * filter the only existed issueOrPullRequest on the GitHub repository
+     * consider the mistake typed issue number.
+     */
     const fulfilleds = fetched.filter(
       (
         item
@@ -33,9 +40,12 @@ export async function getIssuesOrPullrequests(params: {
         NonNullable<RepositoryIssueOrPullRequest>
       > => item.status === 'fulfilled' && item.value !== null
     )
+
+    promiseRejectedReasonHandler(fetched, error)
+
     const pickedValues = fulfilleds.map((o) => o.value)
     return pickedValues
-  } catch (error) {
-    throw Error(error)
+  } catch (err) {
+    throw Error(err)
   }
 }

@@ -3,6 +3,7 @@ import {error} from '@actions/core'
 import {RepositoryIssueOrPullRequest, Config} from '../types'
 import {getIssueOrPullRequestCardNode} from '../libs/getIssueOrPullRequestCardNode'
 import {addProjectCard, moveProjectCard} from '../usecases'
+import {promiseRejectedReasonHandler} from '../utils'
 
 export async function moveIssuesOrPullRequests(params: {
   octokit: GitHub
@@ -41,15 +42,7 @@ export async function moveIssuesOrPullRequests(params: {
     })
   )
 
-  const rejectedReasons = moved
-    .filter((res): res is PromiseRejectedResult => res.status === 'rejected')
-    .map((n) => n.reason)
-
-  if (rejectedReasons.length) {
-    for (const reason of rejectedReasons) {
-      error(reason)
-    }
-  }
+  promiseRejectedReasonHandler(moved, error)
 
   return moved
 }
