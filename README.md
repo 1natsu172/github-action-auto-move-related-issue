@@ -12,7 +12,7 @@ The supported action webhook events are `issues` | `pull_request`.
 
 
 ## Screenshot
-![DEMO GIF](https://raw.githubusercontent.com/1natsu172/github-action-auto-move-related-issue/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/demo.gif)
+![DEMO GIF](https://raw.githubusercontent.com/1natsu172/github-action-auto-move-related-issue/b32ac32e466fe77b3442cc3e5cd348f5d87bd024/media/work-demo.gif)
 
 ## Usage
 
@@ -67,9 +67,13 @@ projectName: "kanban1"
 columnName: "Review in progress"
 ```
 
+**This action support single project and single column target.**
+
 ### Please write an `Issue` paragraph in your Issue or PullRequest content
 
 **Must write `Issue` paragraph and Issue or PullRequest number or url**
+
+![content-body-example](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/b32ac32e466fe77b3442cc3e5cd348f5d87bd024/media/content-body-example.png?raw=true)
 
 example
 
@@ -87,15 +91,13 @@ https://github.com/sushi-kun/github-projects-lab/issues/5
 .
 ```
 
-**This action support single project and single column target.**
-
 ## Config rules
 
 ### Write the exact name
 
 According to the image below.
 
-![project name and column name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/d0035515ff6b689b43c0a65e01e3943a8dde9897/media/project-and-column-name.png?raw=true)
+![project name and column name is here](https://github.com/1natsu172/github-action-auto-move-related-issue/blob/b32ac32e466fe77b3442cc3e5cd348f5d87bd024/media/project-and-column-name.png?raw=true)
 
 ## Behavior
 
