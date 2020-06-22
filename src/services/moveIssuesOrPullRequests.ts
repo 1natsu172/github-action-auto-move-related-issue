@@ -3,7 +3,7 @@ import {error} from '@actions/core'
 import {RepositoryIssueOrPullRequest, Config} from '../types'
 import {getIssueOrPullRequestCardNode} from '../libs/getIssueOrPullRequestCardNode'
 import {addProjectCard, moveProjectCard} from '../usecases'
-import {promiseRejectedReasonHandler} from '../utils'
+import {promiseRejectedReasonHandler, createSkipActionMessage} from '../utils'
 
 export async function moveIssuesOrPullRequests(params: {
   octokit: GitHub
@@ -13,6 +13,12 @@ export async function moveIssuesOrPullRequests(params: {
 }): Promise<PromiseSettledResult<any>[]> {
   const {octokit, config, issuesOrPullrequests, targetColumnId} = params
   const {projectName} = config
+
+  if (!issuesOrPullrequests.length) {
+    throw new Error(
+      createSkipActionMessage('There is no issue or pull_request to move')
+    )
+  }
 
   const cardNodes = issuesOrPullrequests.map((issueOrPullRequest) =>
     getIssueOrPullRequestCardNode({

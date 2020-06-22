@@ -5,11 +5,7 @@ import {
   getIssuesOrPullrequests,
   moveIssuesOrPullRequests
 } from './services'
-import {
-  isSupportActionEvent,
-  createSkipActionMessage,
-  prettyStringify
-} from './utils'
+import {isSupportActionEvent, prettyStringify} from './utils'
 import {thrownHandler, getConfig, getOctokit, getGitHubToken} from './libs'
 
 async function run(): Promise<void> {
@@ -22,6 +18,10 @@ async function run(): Promise<void> {
   endGroup()
 
   try {
+    if (!isSupportActionEvent()) {
+      throw Error('Triggered from can not support action event.')
+    }
+
     const token = getGitHubToken()
     const octokit = getOctokit(token)
     const config = await getConfig({context, octokit})
@@ -40,9 +40,15 @@ async function run(): Promise<void> {
       issuesOrPullrequests: relatedIssuesOrPullrequests
     })
 
+    startGroup('::debug::relatedIssuesOrPullrequests')
     debug(prettyStringify(relatedIssuesOrPullrequests))
+    endGroup()
+    startGroup('::debug::targetColumn')
     debug(prettyStringify(targetColumn))
+    endGroup()
+    startGroup('::debug::moveResult')
     debug(prettyStringify(moveResult))
+    endGroup()
   } catch (error) {
     thrownHandler(error)
   }
