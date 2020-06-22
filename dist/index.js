@@ -491,8 +491,8 @@ module.exports = new Schema({
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FLAG_KEYWORD = exports.SUPPORT_ACTION_EVENT = void 0;
-exports.SUPPORT_ACTION_EVENT = ['moved', 'created', 'converted'];
+exports.FLAG_KEYWORD = exports.SUPPORT_WEBHOOK_EVENT = void 0;
+exports.SUPPORT_WEBHOOK_EVENT = ['issues', 'pull_request'];
 exports.FLAG_KEYWORD = {
     SKIP_ACTION: '[SKIP_ACTION]'
 };
@@ -2956,6 +2956,9 @@ function run() {
         core_1.debug(utils_1.prettyStringify(core_1.getInput('config')));
         core_1.endGroup();
         try {
+            if (!utils_1.isSupportActionEvent()) {
+                throw Error('Triggered from can not support action event.');
+            }
             const token = libs_1.getGitHubToken();
             const octokit = libs_1.getOctokit(token);
             const config = yield libs_1.getConfig({ context: github_1.context, octokit });
@@ -2970,9 +2973,15 @@ function run() {
                 targetColumnId: targetColumn.id,
                 issuesOrPullrequests: relatedIssuesOrPullrequests
             });
+            core_1.startGroup('::debug::relatedIssuesOrPullrequests');
             core_1.debug(utils_1.prettyStringify(relatedIssuesOrPullrequests));
+            core_1.endGroup();
+            core_1.startGroup('::debug::targetColumn');
             core_1.debug(utils_1.prettyStringify(targetColumn));
+            core_1.endGroup();
+            core_1.startGroup('::debug::moveResult');
             core_1.debug(utils_1.prettyStringify(moveResult));
+            core_1.endGroup();
         }
         catch (error) {
             libs_1.thrownHandler(error);
@@ -3484,6 +3493,9 @@ function moveIssuesOrPullRequests(params) {
     return __awaiter(this, void 0, void 0, function* () {
         const { octokit, config, issuesOrPullrequests, targetColumnId } = params;
         const { projectName } = config;
+        if (!issuesOrPullrequests.length) {
+            throw new Error(utils_1.createSkipActionMessage('There is no issue or pull_request to move'));
+        }
         const cardNodes = issuesOrPullrequests.map((issueOrPullRequest) => getIssueOrPullRequestCardNode_1.getIssueOrPullRequestCardNode({
             repositoryIssueOrPullRequest: issueOrPullRequest,
             targetProjectName: projectName
@@ -9353,10 +9365,8 @@ exports.isSupportActionEvent = void 0;
 const github_1 = __webpack_require__(469);
 const constants_1 = __webpack_require__(32);
 function isSupportActionEvent() {
-    var _a;
-    const hasProjectCardContext = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.project_card;
-    const isSupportEvent = constants_1.SUPPORT_ACTION_EVENT.some((event) => event === github_1.context.payload.action);
-    return hasProjectCardContext && isSupportEvent;
+    const isSupportWebhookEvent = constants_1.SUPPORT_WEBHOOK_EVENT.some((event) => event === github_1.context.eventName);
+    return isSupportWebhookEvent;
 }
 exports.isSupportActionEvent = isSupportActionEvent;
 
@@ -13254,6 +13264,7 @@ function getGitHubToken() {
 }
 exports.getGitHubToken = getGitHubToken;
 function getConfig({ octokit, context }) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const configPath = core_1.getInput('config');
         core_1.debug(configPath);
@@ -13263,6 +13274,12 @@ function getConfig({ octokit, context }) {
         }
         if (!lodash_isobject_1.default(config) || !(config instanceof Object)) {
             throw Error('config is malformed');
+        }
+        if (!((_a = config) === null || _a === void 0 ? void 0 : _a.projectName)) {
+            throw Error('not found `projectName` in config');
+        }
+        if (!((_b = config) === null || _b === void 0 ? void 0 : _b.columnName)) {
+            throw Error('not found `columnName` in config');
         }
         return config;
     });
