@@ -28,6 +28,12 @@ export async function getConfig({
   if (!isObject(config) || !(config instanceof Object)) {
     throw Error('config is malformed')
   }
+  if (!(config as Config)?.projectName) {
+    throw Error('not found `projectName` in config')
+  }
+  if (!(config as Config)?.columnName) {
+    throw Error('not found `columnName` in config')
+  }
 
   return config as Config
 }
