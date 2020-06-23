@@ -4482,7 +4482,6 @@ exports.matchIssueNumberFromGitHubURL = /(?<=pul\/|issues\/)\d+/gim;
  * match: 1 12 123
  */
 exports.matchNumberOfShortNotationIssue = /(?<=#)\d+/gim;
-/(?<!(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved) )(https?:\/\/(www\.)?github\.com{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*))/gim;
 
 
 /***/ }),
