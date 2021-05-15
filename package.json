@@ -28,7 +28,7 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/github": "^2.1.1",
-    "@technote-space/github-action-config-helper": "^1.0.2",
+    "@technote-space/github-action-config-helper": "1.0.10",
     "@technote-space/github-action-helper": "^2.0.3",
     "lodash.isobject": "^3.0.2"
   },
